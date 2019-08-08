@@ -1,17 +1,18 @@
 const Episode = require('../models/episode')
-const CrudService = require('./crud').CrudService(Episode)
+const CrudService = require('./crud')
+const EpisodeCrud = CrudService(Episode)
 
 module.exports = {
-    ...CrudService,
+    ...EpisodeCrud,
     getTvShowSeasons: async function(tvShowId){
         let seasons = {}
-        let episodes =await CrudService.getAll()
-        for(var episode in episodes){
-            if(episode.tvshow == tvShowId){
-                if(Object.keys(seasons).includes(episode.seasonNo)){
-                    seasons[episode.seasonNo]=[episode]
+        let episodes =await EpisodeCrud.getAll()
+        for(var i in episodes){
+            if(episodes[i].tvShowId==tvShowId){
+                if(Object.keys(seasons).includes(episodes[i].seasonNo.toString())){
+                    seasons[episodes[i].seasonNo].push(episodes[i])
                 }else{
-                    seasons[episode.seasonNo].push(episode)
+                    seasons[episodes[i].seasonNo]=[episodes[i]]
                 }
             }
         }

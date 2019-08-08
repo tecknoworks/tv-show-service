@@ -42,5 +42,19 @@ module.exports={
             res.send(error.message)
         }
         
+    },
+    getTvShowsByGenreCtrl: async function(req,res){
+        try {
+            let sortedList = await TvShowService.getTvShowsByGenre()
+            for(var genreId in sortedList){
+                for(var i in sortedList[genreId]){
+                    sortedList[genreId][i]= await Mapper.populateModel(sortedList[genreId][i])
+                }
+            }
+            res.send(sortedList)
+
+        } catch (error) {
+            res.send(error.message)
+        }
     }
 }

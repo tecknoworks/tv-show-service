@@ -7,12 +7,11 @@ module.exports = mongoose.model('tvShow', schemaBuilder({
     description: String,
     releaseDate: Date,
     createdAt: Date,
-    seasonsNo: Number,
     genre: String,
     contentRating: String,
     userRating: Number,
     actorList: [String],
     poster: String,
     trailer: String,
-    runtime: Number
+    seasonsNo: Number,
 }))
