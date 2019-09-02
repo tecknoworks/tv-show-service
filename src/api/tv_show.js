@@ -5,9 +5,9 @@ const TvShowController = require('../controllers/tv_show')
 
 router.get('/all', TvShowController.getAllCtrl);
 router.get('/all-by-genre', TvShowController.getTvShowsByGenreCtrl)
-router.get('/:id', TvShowController.getByIdCtrl);
-router.get('/:id/seasons', EpisodeController.getTvShowSeasonsCtrl)
-router.post('/', TvShowController.insertCtrl);
-router.delete('/:id', TvShowController.deleteCtrl);
+router.get('/one', TvShowController.getByIdCtrl);
+router.get('/seasons', EpisodeController.getTvShowSeasonsCtrl)
+router.post('/insert', TvShowController.insertCtrl);
+router.delete('/delete', TvShowController.deleteCtrl);
 
 module.exports= router;

@@ -11,7 +11,7 @@ module.exports={
     },
     getByIdCtrl: async function (req, res){
         try {
-            res.send( await EpisodeService.getById(req.params.id))
+            res.send( await EpisodeService.getById(req.query.episodeId))
         } catch (error) {
             res.send(error.message)
         }
@@ -19,7 +19,12 @@ module.exports={
     },
     insertCtrl: async function (req, res){
         try {
-            res.send( await EpisodeService.insert(req.body))
+            var episode = await EpisodeService.insert(req.body);
+            var episode = await EpisodeService.saveMediaFiles(episode, req.files);
+
+            var episodeObj = episode.toObject();
+            
+            res.send(episodeObj)
         } catch (error) {
             res.send(error.message)
         }
@@ -27,7 +32,7 @@ module.exports={
     },
     deleteCtrl: async function(req, res){
         try {
-            res.send( await EpisodeService.delete(req.params.id))
+            res.send( await EpisodeService.delete(req.query.episodeId))
         } catch (error) {
             res.send(error.message)
         }
@@ -35,7 +40,7 @@ module.exports={
     },
     getTvShowSeasonsCtrl: async function(req, res){
         try {
-            res.send(await EpisodeService.getTvShowSeasons(req.params.id))
+            res.send(await EpisodeService.getTvShowSeasons(req.query.tvShowId))
         } catch (error) {
            res.send(error.message) 
         }

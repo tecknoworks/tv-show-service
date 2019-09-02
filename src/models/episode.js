@@ -9,5 +9,7 @@ module.exports = mongoose.model('episode', schemaBuilder({
     tvShowId: { type: mongoose.Schema.Types.ObjectId, ref: 'tvShow' },
     releaseDate: Date,
     createdAt: Date,
-    runtime: Number
+    runtime: Number,
+    video: String,
+    poster: String
 }))

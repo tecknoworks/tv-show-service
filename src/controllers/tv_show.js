@@ -15,7 +15,7 @@ module.exports={
     },
     getByIdCtrl: async function (req, res){
         try {
-            let tvShow = await TvShowService.getById(req.params.id)
+            let tvShow = await TvShowService.getById(req.query.tvShowId)
             tvShow = await Mapper.populateModel(tvShow)
             res.send(tvShow)
         } catch (error) {
@@ -25,9 +25,17 @@ module.exports={
     },
     insertCtrl: async function (req, res){
         try {
-            let tvShow = await TvShowService.insert(req.body)
-            tvShow = await Mapper.populateModel(tvShow)
-            res.send( tvShow )
+
+            let tvShowMap = req.body;
+            tvShowMap.actorList = JSON.parse(tvShowMap.actorList);
+
+            let tvShow = await TvShowService.insert(tvShowMap)
+
+            tvshow = TvShowService.saveMediaFiles(tvShow, req.files);
+
+            let tvShowObj = tvShow.toObject()
+            tvShowObj = await Mapper.populateModel(tvShowObj)
+            res.send( tvShowObj )
         } catch (error) {
             res.send(error.message)
         }
@@ -35,7 +43,7 @@ module.exports={
     },
     deleteCtrl: async function(req, res){
         try {
-            let tvShow = await TvShowService.delete(req.params.id)
+            let tvShow = await TvShowService.delete(req.query.id)
             tvShow = await Mapper.populateModel(tvShow)
             res.send( tvShow )
         } catch (error) {

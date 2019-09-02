@@ -3,8 +3,8 @@ const router = express.Router()
 const EpisodeController= require('../controllers/episode')
 
 router.get('/all', EpisodeController.getAllCtrl);
-router.get('/:id', EpisodeController.getByIdCtrl);
-router.post('/', EpisodeController.insertCtrl);
-router.delete('/:id', EpisodeController.deleteCtrl); 
+router.get('/one', EpisodeController.getByIdCtrl);
+router.post('/insert', EpisodeController.insertCtrl);
+router.delete('/delete', EpisodeController.deleteCtrl); 
 
 module.exports= router
