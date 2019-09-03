@@ -1,4 +1,5 @@
 const TvShow = require('../models/tv_show');
+const Mapper = require('../helpers/mapper');
 
 const uploadFile = require('../helpers/upload_file');
 const deleteFile = require('../helpers/delete_file');
@@ -10,7 +11,9 @@ const videoServiceUrl = "http://localhost:3003/videos";
 module.exports = {
     getAll: async function () {
         let resultList = await TvShow.find()
-        return resultList.map(doc => doc.toObject())
+        resultList.map(doc => doc.toObject())
+        await Mapper.populateModelList(resultList)
+        return resultList
     },
     getById: async function (id) {
         let result = await TvShow.findById(id);
@@ -35,13 +38,13 @@ module.exports = {
     getTvShowsByGenre: async function(){
         let resultList = await TvShow.find()
         let tvShows= resultList.map(doc => doc.toObject())
-
+        await Mapper.populateModelList(tvShows)
         let sorted = {}
         for(var i in tvShows){
-            if(Object.keys(sorted).includes(tvShows[i].genre)){
-                sorted[tvShows[i].genre].push(tvShows[i])
+            if(Object.keys(sorted).includes(tvShows[i].genre.id)){
+                sorted[tvShows[i].genre.id].push(tvShows[i])
             }else{
-                sorted[tvShows[i].genre]=[tvShows[i]]
+                sorted[tvShows[i].genre.id]=[tvShows[i]]
             }
         }
         return sorted

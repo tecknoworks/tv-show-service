@@ -3,10 +3,7 @@ const Mapper = require('../helpers/mapper')
 module.exports={
     getAllCtrl: async function (req, res) {
         try {
-            let tvShowList =  await TvShowService.getAll() 
-            for(var i=0;i<tvShowList.length;i++){
-                tvShowList[i] = await Mapper.populateModel(tvShowList[i])
-            }
+            let tvShowList = await TvShowService.getAll() 
             res.send(tvShowList)
         } catch (error) {
             res.send(error.message)
@@ -54,11 +51,6 @@ module.exports={
     getTvShowsByGenreCtrl: async function(req,res){
         try {
             let sortedList = await TvShowService.getTvShowsByGenre()
-            for(var genreId in sortedList){
-                for(var i in sortedList[genreId]){
-                    sortedList[genreId][i]= await Mapper.populateModel(sortedList[genreId][i])
-                }
-            }
             res.send(sortedList)
 
         } catch (error) {

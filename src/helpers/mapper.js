@@ -18,5 +18,29 @@ module.exports= {
             }
         }
         return ModelObj
+    },
+    populateModelList: async function(screenplayList){
+        let screenplaysDetails = {}
+        screenplayList.forEach((screenplay)=>{
+            let details={};
+            for(property in screenplay){
+                if(foreignModels.includes(property)){
+                    details[property]=screenplay[property];
+                }
+            }   
+            screenplaysDetails[screenplay.id]=details;
+        });
+
+        let response = await axios.post('http://localhost:3001/details/populate/list',screenplaysDetails);
+
+        let result = response.data;
+        
+        screenplayList.forEach((screenplay, index)=>{
+            for(property in screenplay){
+                if(foreignModels.includes(property)){
+                    screenplayList[index][property]=result[screenplay.id][property];
+                }
+            }
+        });
     }
 }
