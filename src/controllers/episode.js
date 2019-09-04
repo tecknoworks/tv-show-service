@@ -11,7 +11,7 @@ module.exports={
     },
     getByIdCtrl: async function (req, res){
         try {
-            res.send( await EpisodeService.getById(req.query.episodeId))
+            res.send( await EpisodeService.getById(req.query.episodeId, req.userId))
         } catch (error) {
             res.send(error.message)
         }
@@ -40,7 +40,7 @@ module.exports={
     },
     getTvShowSeasonsCtrl: async function(req, res){
         try {
-            res.send(await EpisodeService.getTvShowSeasons(req.query.tvShowId))
+            res.send(await EpisodeService.getTvShowSeasons(req.query.tvShowId, req.userId))
         } catch (error) {
            res.send(error.message) 
         }

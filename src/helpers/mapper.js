@@ -42,5 +42,26 @@ module.exports= {
                 }
             }
         });
+    },
+    addHistoryRecordToList: async function(screenplayList, userId){
+        let response = await axios.get(`http://localhost:3005/history/user-id/${userId}/screenplay-type/episode`)
+        let result = response.data
+        for(var i in screenplayList){
+            if(Object.keys(result).includes(`${screenplayList[i].id}`)){
+                screenplayList[i].historyRecord= result[screenplayList[i].id]
+            }
+        }
+    },
+    getHistoryRecord: async function(screenplay, userId){
+        try {
+            let response = await axios.get(`http://localhost:3005/history/user-id/${userId}/screenplay-id/${screenplay.id}/screenplay-type/episode`)
+            if(response.status==200){
+                screenplay.historyRecord=response.data
+            }
+        } catch (error) {
+            console.log(error.message);
+            return screenplay
+        }
+        
     }
 }
