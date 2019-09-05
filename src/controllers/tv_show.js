@@ -40,7 +40,7 @@ module.exports={
     },
     deleteCtrl: async function(req, res){
         try {
-            let tvShow = await TvShowService.delete(req.query.id)
+            let tvShow = await TvShowService.delete(req.query.tvShowId)
             tvShow = await Mapper.populateModel(tvShow)
             res.send( tvShow )
         } catch (error) {

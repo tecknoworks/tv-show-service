@@ -11,7 +11,7 @@ const videoServiceUrl = "http://localhost:3003/videos";
 module.exports = {
     getAll: async function () {
         let resultList = await TvShow.find()
-        resultList.map(doc => doc.toObject())
+        resultList = resultList.map(doc => doc.toObject())
         await Mapper.populateModelList(resultList)
         return resultList
     },
@@ -31,6 +31,7 @@ module.exports = {
         var deleteVideoUrl = `${videoServiceUrl}/delete`;
 
         await deleteFile(deleteImageUrl, {key: 'imageFileName', value: tvShow.poster});
+        await deleteFile(deleteImageUrl, {key: 'imageFileName', value: tvShow.landscapePoster});
         await deleteFile(deleteVideoUrl, {key: 'videoFileName', value: tvShow.trailer});
 
         return tvShow.toObject()
@@ -51,13 +52,23 @@ module.exports = {
     },
     saveMediaFiles: async function(tvShow, files){
         if(Object.keys(files)!=0){
-            //image upload
-            var imageBuffer =  files.poster.data;
-            imageBuffer.name= files.poster.name;
+            //portrait image upload
+            var portraitImageBuffer =  files.poster.data;
+            portraitImageBuffer.name= files.poster.name;
+
             var uploadImageUrl = `${assetsServiceUrl}/image/upload`
 
-            var imageUploadResponse = await uploadFile(uploadImageUrl, {key: 'image', value: imageBuffer});
-            tvShow.poster = imageUploadResponse == null ? null : imageUploadResponse.imageFileName;
+            var portraitImageUploadResponse = await uploadFile(uploadImageUrl, {key: 'image', value: portraitImageBuffer});
+            tvShow.poster = portraitImageUploadResponse == null ? null : portraitImageUploadResponse.imageFileName;
+
+            //landscape
+            var landscapeImageBuffer =  files.landscapePoster.data;
+            landscapeImageBuffer.name= files.landscapePoster.name;
+
+            var uploadImageUrl = `${assetsServiceUrl}/image/upload`
+
+            var landscapeImageUploadResponse = await uploadFile(uploadImageUrl, {key: 'image', value: landscapeImageBuffer});
+            tvShow.landscapePoster = landscapeImageUploadResponse == null ? null : landscapeImageUploadResponse.imageFileName;
 
             //video upload
             var videoBuffer =  files.trailer.data;
