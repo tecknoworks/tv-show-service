@@ -28,6 +28,13 @@ module.exports = {
     },
     delete: async function (episodeId) {
         let result = await Episode.findByIdAndDelete(episodeId)
+
+        var deleteImageUrl = `${assetsServiceUrl}/image/delete`;
+        var deleteVideoUrl = `${videoServiceUrl}/delete`;
+
+        await deleteFile(deleteImageUrl, {key: 'imageFileName', value: result.poster});
+        await deleteFile(deleteVideoUrl, {key: 'videoFileName', value: result.video});
+
         return result.toObject()
     },
     getTvShowSeasons: async function(tvShowId, userId){
