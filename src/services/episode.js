@@ -3,9 +3,7 @@ const CrudService = require('./crud')
 
 const uploadFile = require('../helpers/upload_file');
 const deleteFile = require('../helpers/delete_file');
-
-const assetsServiceUrl = "http://localhost:3002/assets";
-const videoServiceUrl = "http://localhost:3003/videos";
+const config = require("../config")
 
 const Mapper = require('../helpers/mapper');
 
@@ -29,8 +27,8 @@ module.exports = {
     delete: async function (episodeId) {
         let result = await Episode.findByIdAndDelete(episodeId)
 
-        var deleteImageUrl = `${assetsServiceUrl}/image/delete`;
-        var deleteVideoUrl = `${videoServiceUrl}/delete`;
+        var deleteImageUrl = `${config.assetServiceUrl}/image/delete`;
+        var deleteVideoUrl = `${config.videoServiceUrl}/delete`;
 
         await deleteFile(deleteImageUrl, {key: 'imageFileName', value: result.poster});
         await deleteFile(deleteVideoUrl, {key: 'videoFileName', value: result.video});
@@ -69,7 +67,7 @@ module.exports = {
             var videoBuffer =  files.video.data;
             videoBuffer.name =  files.video.name;
 
-            var uploadVideoWithPosterUrl =`${videoServiceUrl}/upload-with-poster`
+            var uploadVideoWithPosterUrl =`${config.videoServiceUrl}/upload-with-poster`
 
             var videoUploadResponse = await uploadFile(uploadVideoWithPosterUrl, {key: 'video', value: videoBuffer});                
 

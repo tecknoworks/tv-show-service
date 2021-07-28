@@ -3,10 +3,7 @@ const Mapper = require('../helpers/mapper');
 
 const uploadFile = require('../helpers/upload_file');
 const deleteFile = require('../helpers/delete_file');
-
-const assetsServiceUrl = "http://localhost:3002/assets";
-const videoServiceUrl = "http://localhost:3003/videos";
-
+const config = require("../config")
 
 module.exports = {
     getAll: async function () {
@@ -27,8 +24,8 @@ module.exports = {
     delete: async function (id) {
         let tvShow = await TvShow.findByIdAndDelete(id)
 
-        var deleteImageUrl = `${assetsServiceUrl}/image/delete`;
-        var deleteVideoUrl = `${videoServiceUrl}/delete`;
+        var deleteImageUrl = `${config.assetServiceUrl}/image/delete`;
+        var deleteVideoUrl = `${config.videoServiceUrl}/delete`;
 
         await deleteFile(deleteImageUrl, {key: 'imageFileName', value: tvShow.poster});
         await deleteFile(deleteImageUrl, {key: 'imageFileName', value: tvShow.landscapePoster});
@@ -56,7 +53,7 @@ module.exports = {
             var portraitImageBuffer =  files.poster.data;
             portraitImageBuffer.name= files.poster.name;
 
-            var uploadImageUrl = `${assetsServiceUrl}/image/upload`
+            var uploadImageUrl = `${config.assetServiceUrl}/image/upload`
 
             var portraitImageUploadResponse = await uploadFile(uploadImageUrl, {key: 'image', value: portraitImageBuffer});
             tvShow.poster = portraitImageUploadResponse == null ? null : portraitImageUploadResponse.imageFileName;
@@ -65,7 +62,7 @@ module.exports = {
             var landscapeImageBuffer =  files.landscapePoster.data;
             landscapeImageBuffer.name= files.landscapePoster.name;
 
-            var uploadImageUrl = `${assetsServiceUrl}/image/upload`
+            var uploadImageUrl = `${config.assetServiceUrl}/image/upload`
 
             var landscapeImageUploadResponse = await uploadFile(uploadImageUrl, {key: 'image', value: landscapeImageBuffer});
             tvShow.landscapePoster = landscapeImageUploadResponse == null ? null : landscapeImageUploadResponse.imageFileName;
@@ -73,7 +70,7 @@ module.exports = {
             //video upload
             var videoBuffer =  files.trailer.data;
             videoBuffer.name =  files.trailer.name;
-            var uploadVideoWithPosterUrl =`${videoServiceUrl}/upload`
+            var uploadVideoWithPosterUrl =`${config.videoServiceUrl}/upload`
 
             var videoUploadResponse = await uploadFile(uploadVideoWithPosterUrl, {key: 'video', value: videoBuffer});                
             tvShow.trailer = videoUploadResponse!=null ? videoUploadResponse.videoFileName : null;

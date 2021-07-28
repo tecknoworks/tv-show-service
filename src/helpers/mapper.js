@@ -1,4 +1,5 @@
 const axios = require('axios').default
+const config = require("../config");
 
 const foreignModels=['actor', 'actorList', 'genre','genreList', 'contentRating', 'contentRatingList', 'producer', 'producerList'];
 
@@ -10,7 +11,7 @@ module.exports= {
                 idMap[property]=ModelObj[property]
             }
         }
-        let response = await axios.post('http://localhost:3001/details/populate/map',idMap)
+        let response = await axios.post(`${config.screenplayDetailsServiceUrl}/populate/map`,idMap)
         let result =response.data
         for(property in ModelObj){
             if(foreignModels.includes(property)){
@@ -33,12 +34,12 @@ module.exports= {
             idList.push(screenplay.id);
         });
 
-        let response = await axios.post('http://localhost:3001/details/populate/list',screenplaysDetails);
+        let response = await axios.post(`${config.screenplayDetailsServiceUrl}/populate/list`,screenplaysDetails);
 
         let result = response.data;
         
         let param={list: JSON.stringify(idList)};
-        let ratingResponse=await axios.get('http://localhost:3008/ratings/averages',{params: param});
+        let ratingResponse=await axios.get(`${config.ratingServiceUrl}/averages`,{params: param});
         let ratingsMap = ratingResponse.data;
         
         screenplayList.forEach((screenplay, index)=>{
@@ -51,7 +52,7 @@ module.exports= {
         });
     },
     addHistoryRecordToList: async function(screenplayList, userId){
-        let response = await axios.get(`http://localhost:3005/history/user-id/${userId}/screenplay-type/episode`)
+        let response = await axios.get(`${config.historyServiceUrl}/user-id/${userId}/screenplay-type/episode`)
         let result = response.data
         for(var i in screenplayList){
             if(Object.keys(result).includes(`${screenplayList[i].id}`)){
@@ -61,7 +62,7 @@ module.exports= {
     },
     getHistoryRecord: async function(screenplay, userId){
         try {
-            let response = await axios.get(`http://localhost:3005/history/user-id/${userId}/screenplay-id/${screenplay.id}/screenplay-type/episode`)
+            let response = await axios.get(`${config.historyServiceUrl}/user-id/${userId}/screenplay-id/${screenplay.id}/screenplay-type/episode`)
             if(response.status==200){
                 screenplay.historyRecord=response.data
             }

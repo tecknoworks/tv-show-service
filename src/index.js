@@ -4,10 +4,11 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const logger = require('morgan')
 const fileUpload = require('express-fileupload')
+const config = require("./config")
 
 const app = express()
 const port = 3004
-mongoose.connect('mongodb://localhost:27017/tv_shows', { useNewUrlParser: true })
+mongoose.connect(config.batabaseUrl, { useNewUrlParser: true })
 
 app.use(cors())
 app.use(bodyParser.json())
